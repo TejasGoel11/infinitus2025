@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinitus</title>
+    <link rel="icon" type="image/png" href="infinitus-logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <style>
+        .pdf-container {
+            background: rgba(0,0,0,0.8);
+            height: 500px;
+            overflow: auto;
+        }
+        .pdf-viewer {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <style>
+        :root {
+            --primary: #6c63ff;
+            --secondary: #4d44db;
+            --accent: #00e676;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .tech-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px rgba(108, 99, 255, 0.7);
+        }
+        
+        .hero-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-bg::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ce8502fb-800e-4678-b7b3-0990f91ec25c.png') center/cover no-repeat;
+            background-color: var(--darker);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .circuit-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(108, 99, 255, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, rgba(108, 99, 255, 0.1) 2px, transparent 2px);
+            background-size: 50px 50px;
+        }
+        
+        .countdown-box {
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
+        }
+        
+        .timeline {
+            position: relative;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            border-radius: 10px;
+        }
+        
+        .form-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.3);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 3s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen circuit-pattern">
+    <!-- Header -->
+    <header class="py-4 px-6 flex justify-between items-center bg-black bg-opacity-70 border-b border-gray-800 sticky top-0 z-50">
+        <div class="flex items-center">
+            <div class="mr-4">
+                <img src="infinitus-banner.png" alt="Infinitus logo here" class="h-16" />
+            </div>
+            <div class="hidden md:block ml-4 border-l border-gray-700 pl-4">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b87cd988-2952-463f-9fa8-418128f8c611.png" alt="School logo here" class="h-12" />
+            </div>
+        </div>
+        <nav class="hidden md:flex space-x-8">
+            <a href="#about" class="text-gray-300 hover:text-white transition">About</a>
+            <a href="#schedule" class="text-gray-300 hover:text-white transition">Schedule</a>
+            <a href="#events" class="text-gray-300 hover:text-white transition">Events</a>
+            <a href="#register" class="text-gray-300 hover:text-white transition">Register</a>
+        </nav>
+        <button class="md:hidden text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-[70vh] flex items-center justify-center relative py-16">
+        <div class="container mx-auto px-6 z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-6xl font-bold tech-font glow mb-6">
+                    <span class="text-white">INFINITUS</span> <span class="text-accent animate-pulse-slow">2025</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8">
+                    Annual IT Fest | July 16, 2025<br>
+                    Hybrid Mode (Online + Offline)
+                </p>
+                
+                <div class="countdown-box p-6 rounded-lg inline-block">
+                    <div id="countdown" class="flex justify-center space-x-2 sm:space-x-4 md:space-x-6">
+                        <div class="text-center">
+                            <div class="text-3xl md:text-5xl font-bold tech-font days text-primary">00</div>
+                            <div class="text-sm text-gray-400">Days</div>
+                        </div>
+                        <div class="text-3xl md:text-5xl font-bold tech-font">:</div>
+                        <div class="text-center">
+                            <div class="text-3xl md:text-5xl font-bold tech-font hours text-primary">00</div>
+                            <div class="text-sm text-gray-400">Hours</div>
+                        </div>
+                        <div class="text-3xl md:text-5xl font-bold tech-font">:</div>
+                        <div class="text-center">
+                            <div class="text-3xl md:text-5xl font-bold tech-font mins text-primary">00</div>
+                            <div class="text-sm text-gray-400">Minutes</div>
+                        </div>
+                        <div class="text-3xl md:text-5xl font-bold tech-font">:</div>
+                        <div class="text-center">
+                            <div class="text-3xl md:text-5xl font-bold tech-font secs text-primary">00</div>
+                            <div class="text-sm text-gray-400">Seconds</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-8 left-0 right-0 flex justify-center">
+            <a href="#about" class="text-white animate-bounce">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 px-6 bg-darker">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-3xl md:text-4xl font-bold tech-font text-center mb-12">
+                <span class="text-white">ABOUT</span> <span class="text-primary">INFINITUS</span>
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        Infinitus is our prestigious IT Fest bringing together tech enthusiasts from across institutions. 
+                        This single-day hybrid event (both online and offline) celebrates innovation through engaging competitions.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        With 6 exciting technical events, Infinitus provides a platform to showcase skills and explore new technologies.
+                    </p>
+                    <div class="mt-8">
+                        <a href="#register" class="bg-primary hover:bg-secondary text-white py-3 px-8 rounded-full inline-flex items-center transition">
+                            Register Now
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <img src="infinitus-logo.png" alt="Infinitus Logo 2" class="rounded-lg shadow-xl">
+                    <div class="absolute -bottom-6 -left-6 w-16 h-16 bg-primary rounded-full opacity-80 animate-pulse-slow"></div>
+                    <div class="absolute -top-6 -right-6 w-24 h-24 rounded-full border-4 border-accent opacity-70"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section id="schedule" class="py-16 px-6 bg-dark">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-3xl md:text-4xl font-bold tech-font text-center mb-12">
+                <span class="text-gray-300">EVENT</span> <span class="text-primary">TIMELINE</span>
+            </h2>
+            
+            <div class="timeline">
+                <!-- Inauguration -->
+                <div class="mb-12 timeline-item">
+                    <div class="md:flex items-center">
+                        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
+                            <h3 class="text-xl font-bold text-white">Inauguration</h3>
+                            <p class="text-gray-400">9:00 AM - 10:00 AM</p>
+                        </div>
+                        <div class="hidden md:block w-1/12 text-center px-4">
+                            <div class="w-6 h-6 bg-accent rounded-full mx-auto flex items-center justify-center z-10 relative">
+                                <div class="w-4 h-4 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="md:w-5/12 bg-darker p-6 rounded-lg">
+                            <p class="text-gray-300">Opening ceremony with keynote address and lamp lighting</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Events -->
+                <div class="mb-12 timeline-item">
+    <div class="md:flex items-center">
+        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
+            <h3 class="text-xl font-bold text-white">Main Events</h3>
+            <p class="text-gray-400">10:30 AM - 4:30 PM</p>
+        </div>
+        <div class="hidden md:block w-1/12 text-center px-4">
+            <div class="w-6 h-6 bg-accent rounded-full mx-auto flex items-center justify-center z-10 relative">
+                <div class="w-4 h-4 bg-white rounded-full"></div>
+            </div>
+        </div>
+        <div class="md:w-5/12 bg-darker p-6 rounded-lg">
+            <p class="text-gray-300">Technical competitions</p>
+        </div>
+    </div>
+</div>
+
+                <!-- Closing -->
+                <div class="mb-12 timeline-item">
+                    <div class="md:flex items-center">
+                        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
+                            <h3 class="text-xl font-bold text-white">Closing Ceremony</h3>
+                            <p class="text-gray-400">5:00 PM - 6:00 PM</p>
+                        </div>
+                        <div class="hidden md:block w-1/12 text-center px-4">
+                            <div class="w-6 h-6 bg-accent rounded-full mx-auto flex items-center justify-center z-10 relative">
+                                <div class="w-4 h-4 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="md:w-5/12 bg-darker p-6 rounded-lg">
+                            <p class="text-gray-300">Prize distribution and concluding remarks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Creatives/Teaser Section -->
+    <section id="events" class="py-16 px-6 bg-darker">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-3xl md:text-4xl font-bold tech-font text-center mb-12">
+                <span class="text-white">EVENT</span> <span class="text-primary">CREATIVES</span>
+            </h2>
+            
+            <div class="max-w-4xl mx-auto space-y-12">
+                <!-- Teaser Video -->
+                <div class="bg-dark rounded-xl overflow-hidden shadow-2xl">
+               <div class="aspect-w-16 aspect-h-9">
+                            <div class="bg-dark rounded-xl overflow-hidden shadow-2xl">
+    <div class="p-6">
+        <h3 class="text-2xl font-bold mb-4 text-white text-center">Infinitus 2025 Teaser</h3>
+        <video class="w-full rounded-lg" controls autoplay muted>
+            <source src="assets/teaser.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Viewer -->
+                <div class="bg-dark rounded-xl overflow-hidden shadow-2xl">
+    <div class="p-6">
+        <h3 class="text-2xl font-bold mb-4 text-white text-center">Event Brochure</h3>
+        <iframe 
+            src="assets/creatives.pdf"
+            width="100%" 
+            height="600px" 
+            class="rounded-lg border-2 border-primary">
+        </iframe>
+    </div>
+</div>
+            </div>
+
+            <script>
+                // PDF Viewer Setup
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+                
+                let pdfDoc = null,
+                    pageNum = 1,
+                    pageRendering = false,
+                    pageNumPending = null,
+                    scale = 1.5,
+                    canvas = document.getElementById('pdf-viewer'),
+                    ctx = canvas.getContext('2d');
+
+                function renderPage(num) {
+                    pageRendering = true;
+                    pdfDoc.getPage(num).then(function(page) {
+                        const viewport = page.getViewport({scale: scale});
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        
+                        const renderContext = {
+                            canvasContext: ctx,
+                            viewport: viewport
+                        };
+                        
+                        const renderTask = page.render(renderContext);
+                        renderTask.promise.then(function() {
+                            pageRendering = false;
+                            if (pageNumPending !== null) {
+                                renderPage(pageNumPending);
+                                pageNumPending = null;
+                            }
+                        });
+                    });
+                    
+                    document.getElementById('page-num').textContent = `Page ${num} of ${pdfDoc.numPages}`;
+                }
+
+                function queueRenderPage(num) {
+                    if (pageRendering) {
+                        pageNumPending = num;
+                    } else {
+                        renderPage(num);
+                    }
+                }
+
+                function prevPage() {
+                    if (pageNum <= 1) return;
+                    pageNum--;
+                    queueRenderPage(pageNum);
+                }
+
+                function nextPage() {
+                    if (pageNum >= pdfDoc.numPages) return;
+                    pageNum++;
+                    queueRenderPage(pageNum);
+                }
+
+                // Load default PDF
+                pdfjsLib.getDocument('assets/creatives.pdf').promise.then(function(pdfDoc_) {
+                    pdfDoc = pdfDoc_;
+                    renderPage(pageNum);
+                });
+            </script>
+        </div>
+    </section>
+
+    <!-- Registration Form -->
+    <section id="register" class="py-16 px-6 bg-dark">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-3xl md:text-4xl font-bold tech-font text-center mb-12">
+                <span class="text-gray-300">REGISTRATION</span> <span class="text-primary">FORM</span>
+            </h2>
+            
+            <div class="text-center">
+                <a href="https://forms.cloud.microsoft/r/zmiz6LbsXH" target="_blank" class="inline-block bg-primary hover:bg-secondary text-white text-lg font-bold py-3 px-12 rounded-full transition">
+                    Register Now
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline ml-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <p class="mt-4 text-gray-400"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Credits Section -->
+    <footer class="py-12 px-6 bg-black bg-opacity-70">
+        <div class="container mx-auto max-w-6xl">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <img src="infinitus-logo.png" alt="Official Infinitus 2025 footer logo" class="h-12 mb-4">
+                    <p class="text-gray-400">
+                        Infinitus is the IT Fest organized by Delhi Public School Ghaziabad,Meerut Road, bringing together tech enthusiasts from across the region.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-gray-400 hover:text-primary transition">About</a></li>
+                        <li><a href="#schedule" class="text-gray-400 hover:text-primary transition">Schedule</a></li>
+                        <li><a href="#events" class="text-gray-400 hover:text-primary transition">Events</a></li>
+                        <li><a href="#register" class="text-gray-400 hover:text-primary transition">Register</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-4">Credits</h3>
+                    <ul class="text-gray-400 space-y-2">
+                        <li>Graphics & Web Development: Tejas Goel</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <div class="text-gray-500 text-sm mb-4 md:mb-0">
+                    
+                </div>
+                    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            const countdownDate = new Date("July 16, 2025 00:00:00").getTime();
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.querySelector(".days").textContent = days.toString().padStart(2, "0");
+            document.querySelector(".hours").textContent = hours.toString().padStart(2, "0");
+            document.querySelector(".mins").textContent = minutes.toString().padStart(2, "0");
+            document.querySelector(".secs").textContent = seconds.toString().padStart(2, "0");
+            
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.querySelector(".days").textContent = "00";
+                document.querySelector(".hours").textContent = "00";
+                document.querySelector(".mins").textContent = "00";
+                document.querySelector(".secs").textContent = "00";
+            }
+        }
+        
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+        // Form Submission
+        document.getElementById("registrationForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            // Form validation
+            let isValid = true;
+            const inputs = this.querySelectorAll("input[required], textarea[required]");
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = "#ff4757";
+                    isValid = false;
+                } else {
+                    input.style.borderColor = "rgba(255, 255, 255, 0.2)";
+                }
+            });
+            
+            if (!isValid) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+            
+            // Form data
+            const formData = new FormData(this);
+            
+            // Here you would normally send the data to a server
+            // For demo, we'll just show a success message
+            alert("Registration successful! We'll contact you with more details.");
+            this.reset();
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Mobile menu toggle (would need additional CSS for mobile menu)
+        const mobileMenuButton = document.querySelector('header button.md\\:hidden');
+        mobileMenuButton.addEventListener('click', function() {
+            // Toggle mobile menu
+            console.log("Mobile menu clicked");
+        });
+    </script>
+<audio id="bg-music" loop>
+  <source src="assets/bg-music.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+  function enableMusic() {
+    const audio = document.getElementById('bg-music');
+    audio.play().catch(e => {
+      console.log("Audio play failed:", e);
+    });
+
+    // Remove the event listener after first play
+    document.removeEventListener('click', enableMusic);
+    document.removeEventListener('touchstart', enableMusic);
+  }
+
+  document.addEventListener('click', enableMusic);
+  document.addEventListener('touchstart', enableMusic);
+</script>
+
+</body>
+</html>
+
